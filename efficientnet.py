@@ -197,6 +197,7 @@ BASE_DOCSTRING = """Instantiates the {name} architecture.
         Defaults to 'softmax'.
         When loading pretrained weights, `classifier_activation` can only
         be `None` or `"softmax"`.
+    lite: boolean. Whether To use lite variant of the model. 
 
   Returns:
     A `keras.Model` instance.
