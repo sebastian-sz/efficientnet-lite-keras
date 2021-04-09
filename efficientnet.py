@@ -368,7 +368,7 @@ def EfficientNet(
     args['filters_in'] = round_filters(args['filters_in'])
     args['filters_out'] = round_filters(args['filters_out'])
 
-    if lite and (i == 0 or i == len(blocks_args) - 1):
+    if lite and i in (0, len(blocks_args) - 1):
       repeats = args.pop('repeats')
     else:
       repeats = round_repeats(args.pop('repeats'))
