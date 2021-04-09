@@ -21,6 +21,8 @@ The steps are as follows:
 
 # How to use EfficientNetLite?
 
+### Load models
+
 You can call the existing models via:
 ```python
 from efficientnet import EfficientNetB0
@@ -36,6 +38,34 @@ B2Lite: 260x260
 B3Lite: 280x280  # NOT 300 as opposed to non-lite.
 B4Lite: 300x300  # NOT 380 as opposed to non-lite.
 ```
+
+### Fine tune on custom data
+You can also convert weights and load the models with `notop` option for further 
+fine-tuning.    
+In the following example I will prepare B0 variant:
+```
+# Convert the weights with notop option:
+
+python efficientnet_weight_update_util.py \
+    --model b0 \
+    --notop \
+    --lite \
+    --ckpt weights/original_weights/efficientnet-lite0/model.ckpt \
+    --output weights/efficient_net_lite_b0_notop.h5
+```
+
+The model can be loaded as such:
+```python
+import efficientnet 
+
+model = efficientnet.EfficientNetB0(
+    lite=True, include_top=False, weights="weights/efficient_net_lite_b0_notop.h5"
+)
+```
+
+The model can be used similar to other models in 
+[this tutorial](https://www.tensorflow.org/tutorials/images/transfer_learning#create_the_base_model_from_the_pre-trained_convnets).
+
 
 # Generating original outputs:
 For sanity checking I ran inference on panda image (also mentioned in original 
