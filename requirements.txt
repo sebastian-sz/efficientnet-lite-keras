@@ -1,0 +1,2 @@
+# Lint tool
+pre-commit>=2.12,<2.13
