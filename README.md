@@ -1,92 +1,84 @@
 # Introduction
-This is a rather utility repo for converiting (and loading) EfficientNet Lite weights
-from Tensorflow's `.ckpt` format into Keras's `.h5` files.   
+This is a package with EfficientNet-Lite model variants adapted to Keras.
 
-Those weights are compatible and can be used similar to other models present in 
-`tf.keras.applications`.
+# How to use
+There are 5 lite model variants you can use: B0, B1, B2, B3, B4.
 
-# How to convert weights:
-The steps are as follows:
+### Installation
+TODO
 
-1. Start Tensorflow docker: `bash run_docker.sh`
-2. Download original TF's ckpt weights: `cd weights/original_weights` and 
-   `bash download_all.sh`. This will download weights for B0Lite - B4Lite variants.
-4. `cd ../..`
-5. You can convert weights via modified script `efficientnet_weight_update_util.py`. For
-	detailed usage please refer to possible args in the script. To convert all variants
-   (B0 - B4) you can use the `bash convert_all_weights.sh` utility script.
-6. In `weights/` you should have all the converted "lite" weights in Keras `.h5` format.
-7. Run tests if converted weights produce the same output as original model variants
-   `python test_output_consistency.py` (this takes ~15 seconds).
+### Usage
 
-# How to use EfficientNetLite?
 
-### Load models
-
-You can call the existing models via:
+The functionality is basically the same as for other models in
+`tf.keras.applications`. The snippet:
 ```python
-from efficientnet import EfficientNetB0
+from efficientnet_lite import EfficientNetLiteB0
 
-model = EfficientNetB0(lite=True, weights="path/to/converted/h5_file")
-```
-The model expects RGB Frame in range 0-255 (just like the non-lite variant).
-The input shapes are:
-```
-B0Lite: 224x224
-B1Lite: 240x240
-B2Lite: 260x260 
-B3Lite: 280x280  # NOT 300 as opposed to non-lite.
-B4Lite: 300x300  # NOT 380 as opposed to non-lite.
+model = EfficientNetLiteB0(weights='imagenet', input_shape=(224, 224, 3))
 ```
 
-### Fine tune on custom data
-You can also convert weights and load the models with `notop` option for further 
-fine-tuning.    
-In the following example I will prepare B0 variant:
-```
-# Convert the weights with notop option:
+will create the B0 model variant and download Imagenet weights.
 
-python efficientnet_weight_update_util.py \
-    --model b0 \
-    --notop \
-    --lite \
-    --ckpt weights/original_weights/efficientnet-lite0/model.ckpt \
-    --output weights/efficient_net_lite_b0_notop.h5
-```
+Fine-tuning tutorial coming soon! (TODO)
 
-The model can be loaded as such:
+### Preprocessing
+The models expect image values in range `-1:+1`. In more detail the preprocessing
+function looks as follows:
 ```python
-import efficientnet 
-
-model = efficientnet.EfficientNetB0(
-    lite=True, include_top=False, weights="weights/efficient_net_lite_b0_notop.h5"
-)
+def preprocess(image):
+    return (image - 127.00) / 128.00
 ```
 
-The model can be used similar to other models in 
-[this tutorial](https://www.tensorflow.org/tutorials/images/transfer_learning#create_the_base_model_from_the_pre-trained_convnets).
+### Input shapes
+The following table shows input shapes for each model variant:
 
+| Model variant | Input shape |
+|:-------------:|:-----------:|
+|       B0      | `224,224`  |
+|       B1      | `240,240`  |
+|       B2      | `260,260`   |
+|       B3      | `280,280`   |
+|       B4      | `300,300`   |
 
-# Generating original outputs:
-For sanity checking I ran inference on panda image (also mentioned in original 
-EfficientNet repository) and saved the results as numpy (`.npy`) files.
+### TF's Model Optimization Toolkit
+Lite model variants were intended for mobile use and embedded systems, so I tested if
+they work with Tensorflow Model Optimization Toolkit.
 
-The inference was run using the lite variants - to check if weights and 
-architecture were successfully ported.
+Pruning tutorial coming soon! (TODO)
 
-The inference was also run using the non-lite variants - for sanity checking if the 
-original models remained unchanged.
+# Original weights
+The original weights are present in the
+[original repoistory](https://github.com/tensorflow/tpu/blob/master/models/official/efficientnet/lite/)
+for Efficient Net in the form of Tensorflow's `.ckpt` files. Also, on Tensorflow's
+Github, there is a [utility script](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/keras/applications/efficientnet_weight_update_util.py)
+for converting EfficientNet weights.
 
-To obtain the original, non-lite model outputs: you can run   
-`cd utils; python generate_original_outputs.py`
+The scripts worked for me, after I modified the model's architecture, to match the
+description of Lite variants.
 
-To obtain the original, lite model outputs I provided a Colab Notebook that is sadly
-rather manual. Inspecting `utils/efficient_net_lite_original_outputs.ipynb` should
-give you a general idea.
+### Convert the weights manually:
+I am hosting the converted weights on DropBox. They will be automatically downloaded
+if you pass `weights="imagenet"` argument when creating the model.
 
+If you want to convert the weights
+yourself, I provided utility scripts to do so:
 
-# Further todos:
+   1. `bash scripts/download_all_weights.sh` will download the original ckpt files into
+`weights/original_weights` directory.
+   2. `bash/scripts/convert_all_weights.sh` will convert all downloaded weights into
+      Keras's `.h5` files.
 
-3) (optional) Maintain the weights in Google Drive in case authors decide to get rid of them.
-8) Lite flag only in models from B0-B4. Raise Value Error in heavier models as `lite` 
-   option can be (but will throw errors) passed via `kwargs`?
+### The architecture
+The differences between Lite and non-Lite variants are as follows:
+* Remove squeeze-and-excite.
+* Replace all swish with RELU6.
+* Fix the stem and head while scaling models up.
+
+# Bibliography
+[1] [Original repository](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite)
+[2] Existing non-lite [Keras EfficientNet models](TODO)
+[3] Weight update [util](TODO)
+
+# Closing words
+If you found this repo useful, please consider giving it a star!
