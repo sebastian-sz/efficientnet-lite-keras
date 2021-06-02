@@ -78,7 +78,7 @@ class TestKerasVSOriginalOutputConsistency(parameterized.TestCase):
 
         original_outputs = np.load(original_outputs)
 
-        tf.debugging.assert_near(outputs, original_outputs)
+        tf.debugging.assert_near(outputs, original_outputs, rtol=1e-3, atol=1e-3)
 
     @staticmethod
     def _pre_process_image(img: tf.Tensor) -> tf.Tensor:

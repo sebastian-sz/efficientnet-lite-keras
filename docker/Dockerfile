@@ -1,17 +1,14 @@
 FROM tensorflow/tensorflow:2.4.1
 WORKDIR /workspace
 
-# Upgrade pip
-RUN /usr/bin/python3 -m pip install --upgrade pip
-
-# Install requirements:
+# Copy files to install package
+COPY README.md .
 COPY requirements.txt .
-RUN pip3 install -r requirements.txt
-
-# Install test requirements
-COPY efficientnet_lite/tests/requirements.txt .
-RUN pip3 install -r requirements.txt
-
-# Install repo for imports to work properly
+COPY efficientnet_lite efficientnet_lite
 COPY setup.py .
-RUN pip3 install -e .
+
+# Install:
+RUN /usr/bin/python3 -m pip install --no-cache-dir --upgrade pip && \
+    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install --no-cache-dir -r efficientnet_lite/tests/requirements.txt && \
+    pip3 install --no-cache-dir -e .
