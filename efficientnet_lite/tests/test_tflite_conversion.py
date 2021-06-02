@@ -34,7 +34,7 @@ class TestTFLiteConversion(parameterized.TestCase):
         original_output = model.predict(mock_input)
         tflite_output = self._run_tflite_inference(mock_input)
 
-        tf.debugging.assert_near(original_output, tflite_output)
+        tf.debugging.assert_near(original_output, tflite_output, rtol=1e-3, atol=1e-3)
 
     def _convert_and_save_tflite(self, model: tf.keras.Model):
         converter = tf.lite.TFLiteConverter.from_keras_model(model)
