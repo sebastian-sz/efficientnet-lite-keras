@@ -129,7 +129,7 @@ def EfficientNetLite(
         model_name: string, model name.
         include_top: whether to include the fully-connected
             layer at the top of the network.
-        weights: # TODO,
+        weights: 'imagenet' or path to weights file.
         input_tensor: optional Keras tensor
             (i.e. output of `layers.Input()`)
             to use as image input for the model.
@@ -166,7 +166,6 @@ def EfficientNetLite(
     if blocks_args == "default":
         blocks_args = DEFAULT_BLOCKS_ARGS
 
-    # Todo: figure this out to be consistent with the current API
     if not (weights in {"imagenet", None} or file_io.file_exists_v2(weights)):
         raise ValueError(
             "The `weights` argument should be either "
