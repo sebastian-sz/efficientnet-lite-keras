@@ -8,7 +8,7 @@ import onnxruntime
 import tensorflow as tf
 from absl.testing import absltest, parameterized
 
-from efficientnet_lite.tests.test_efficientnet_lite import TEST_PARAMS
+from tests.test_efficientnet_lite import TEST_PARAMS
 
 # Disable GPU
 tf.config.set_visible_devices([], "GPU")
