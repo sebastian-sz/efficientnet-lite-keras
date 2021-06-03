@@ -12,7 +12,9 @@ You need to have Tensorflow 2.x installed for this to work.
 
 #### Build from source:
 `git clone https://github.com/sebastian-sz/efficientnet-lite-keras.git`
+
 `cd efficientnet_lite_keras`
+
 `pip install -e .`
 
 ### Usage
