@@ -5,7 +5,15 @@ This is a package with EfficientNet-Lite model variants adapted to Keras.
 There are 5 lite model variants you can use: B0, B1, B2, B3, B4.
 
 ### Installation
-TODO
+You need to have Tensorflow 2.x installed for this to work.
+
+#### (Recommended) pip:
+`pip install git+https://github.com/sebastian-sz/efficientnet-lite-keras@main`
+
+#### Build from source:
+`git clone https://github.com/sebastian-sz/efficientnet-lite-keras.git`
+`cd efficientnet_lite_keras`
+`pip install -e .`
 
 ### Usage
 
@@ -20,7 +28,7 @@ model = EfficientNetLiteB0(weights='imagenet', input_shape=(224, 224, 3))
 
 will create the B0 model variant and download Imagenet weights.
 
-Fine-tuning tutorial coming soon! (TODO)
+For how to fine-tune the model you can check out the [Colab Quickstart](https://colab.research.google.com/drive/1d_TJGYt68SBmCDnrNEGOz8XKbKNm_7tY?usp=sharing).
 
 ### Preprocessing
 The models expect image values in range `-1:+1`. In more detail the preprocessing
@@ -45,7 +53,14 @@ The following table shows input shapes for each model variant:
 Lite model variants were intended for mobile use and embedded systems, so I tested if
 they work with Tensorflow Model Optimization Toolkit.
 
-Pruning tutorial coming soon! (TODO)
+For example, preparing the model for pruning should work:
+```python
+import tensorflow_model_optimization as tfmot
+from efficientnet_lite import EfficientNetLiteB0
+
+model = EfficientNetLiteB0()
+model = tfmot.sparsity.keras.prune_low_magnitude(model)
+```
 
 # Original weights
 The original weights are present in the
@@ -77,8 +92,8 @@ The differences between Lite and non-Lite variants are as follows:
 
 # Bibliography
 [1] [Original repository](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite)
-[2] Existing non-lite [Keras EfficientNet models](TODO)
-[3] Weight update [util](TODO)
+[2] Existing non-lite [Keras EfficientNet models](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/keras/applications/efficientnet.py)
+[3] Weight update [util](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/keras/applications/efficientnet_weight_update_util.py)
 
 # Closing words
 If you found this repo useful, please consider giving it a star!
