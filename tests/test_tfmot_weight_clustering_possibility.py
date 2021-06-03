@@ -2,7 +2,7 @@ import tensorflow as tf
 import tensorflow_model_optimization as tfmot
 from absl.testing import parameterized
 
-from efficientnet_lite.tests.test_efficientnet_lite import TEST_PARAMS
+from tests.test_efficientnet_lite import TEST_PARAMS
 
 # Disable GPU
 tf.config.set_visible_devices([], "GPU")

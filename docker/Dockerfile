@@ -1,14 +1,14 @@
 FROM tensorflow/tensorflow:2.4.1
 WORKDIR /workspace
 
-# Copy files to install package
-COPY README.md .
+# Install requirements
 COPY requirements.txt .
-COPY efficientnet_lite efficientnet_lite
-COPY setup.py .
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Install:
-RUN /usr/bin/python3 -m pip install --no-cache-dir --upgrade pip && \
-    pip3 install --no-cache-dir -r requirements.txt && \
-    pip3 install --no-cache-dir -r efficientnet_lite/tests/requirements.txt && \
-    pip3 install --no-cache-dir -e .
+# Install test requirements
+COPY tests/requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy the content of the local directory to the working directory
+COPY . .
+RUN pip3 install --no-cache-dir -e .

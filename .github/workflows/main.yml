@@ -26,7 +26,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install tensorflow==${{matrix.tensorflow-version}}
-          pip install -r efficientnet_lite/tests/requirements.txt
+          pip install -r tests/requirements.txt
           pip install -e .
       - name: Run tests
         run: make test
@@ -53,4 +53,4 @@ jobs:
          run: bash docker/build_docker.sh
        - name: Test docker
          run: |
-          docker run --rm keras_efficientnet_lite python -m unittest efficientnet_lite/tests/*.py
+          docker run --rm keras_efficientnet_lite python -m unittest tests/*.py

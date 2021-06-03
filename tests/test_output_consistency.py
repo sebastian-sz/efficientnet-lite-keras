@@ -12,7 +12,7 @@ from efficientnet_lite import (
     EfficientNetLiteB3,
     EfficientNetLiteB4,
 )
-from efficientnet_lite.tests._root_dir import ROOT_DIR
+from tests._root_dir import ROOT_DIR
 
 # Disable GPU
 tf.config.set_visible_devices([], "GPU")
