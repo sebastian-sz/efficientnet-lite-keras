@@ -37,7 +37,7 @@ You can also fine tune these models, just like other Keras models. For end-to-en
 
 # Installation
 There are multiple ways to install.  
-The only requirements are Tensorflow 2.x and Python 3.6+.
+The only requirements are Tensorflow 2.2+ and Python 3.6+.
 
 ### (Recommended) pip install from github
 `pip install git+https://github.com/sebastian-sz/efficientnet-lite-keras@main`
@@ -105,7 +105,9 @@ The scripts worked for me, after I modified the model's architecture, to match t
 description of Lite variants.
 
 ### (Optionally) Convert the weights
-I am hosting the converted weights on DropBox. If, for some reason, you wish to download and convert original weights yourself, I prepered the utility scripts:  
+I am hosting the converted weights on DropBox. If, for some reason, you wish to download and convert original weights yourself, I prepered the utility scripts: 
+1. `bash scripts/download_all_weights.sh`
+2. `bash scripts/conver_all_weights.sh`
 
 # Bibliography
 [1] [Original repository](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite)  
