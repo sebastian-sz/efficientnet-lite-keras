@@ -52,6 +52,16 @@ pip install .
 ### (Alternatively) No install:
 If you do not want to install you could just drop the `efficientnet_lite/efficientnet_lite.py` file directly into your project.
 
+### Docker
+You can also install this package as an extension to official Tensorflow docker container:  
+
+Build: `docker build -t efficientnet_lite_keras .`  
+Run: `docker run -it --rm efficientnet_lite_keras`
+
+For GPU support or different TAG you can (for example) pass  
+`--build-arg IMAGE_TAG=2.5.0-gpu`  
+in build command.
+
 ### Verify installation
 If all goes well you should be able to import:  
 `from efficientnet_lite import *` 
@@ -107,7 +117,7 @@ description of Lite variants.
 ### (Optionally) Convert the weights
 I am hosting the converted weights on DropBox. If, for some reason, you wish to download and convert original weights yourself, I prepered the utility scripts: 
 1. `bash scripts/download_all_weights.sh`
-2. `bash scripts/conver_all_weights.sh`
+2. `bash scripts/convert_all_weights.sh`
 
 # Bibliography
 [1] [Original repository](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite)  
