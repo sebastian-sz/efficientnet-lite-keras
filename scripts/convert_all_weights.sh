@@ -33,7 +33,7 @@ python scripts/efficientnet_weight_update_util.py \
   --model b1 \
   --ckpt weights/original_weights/efficientnet-lite1/model.ckpt \
   --notop \
-  -o weights/efficient_net_lite_b1_notop.h5
+  -o weights/efficientnet_lite_b1_notop.h5
 
 python scripts/efficientnet_weight_update_util.py \
   --model b2 \
