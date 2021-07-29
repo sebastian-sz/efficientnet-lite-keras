@@ -29,7 +29,9 @@ class TestONNXConversion(parameterized.TestCase):
     def test_model_onnx_conversion(
         self, model: tf.keras.Model, input_shape: Tuple[int, int]
     ):
-        model = model(weights=None)
+        # Comparison will fail with random weights as we are comparing
+        # very low floats:
+        model = model(weights="imagenet", input_shape=(*input_shape, 3))
         model.save(self.saved_model_path)
 
         self._convert_onnx()
@@ -37,13 +39,13 @@ class TestONNXConversion(parameterized.TestCase):
 
         # Compare outputs:
         mock_input = self.rng.uniform(shape=(1, *input_shape, 3), dtype=tf.float32)
-        original_output = model.predict(mock_input)
+        original_output = model(mock_input, training=False)
 
         onnx_session = onnxruntime.InferenceSession(self.onnx_model_path)
         onnx_inputs = {onnx_session.get_inputs()[0].name: mock_input.numpy()}
         onnx_output = onnx_session.run(None, onnx_inputs)
 
-        tf.debugging.assert_near(original_output, onnx_output, rtol=1e-3, atol=1e-3)
+        tf.debugging.assert_near(original_output, onnx_output)
 
     def _convert_onnx(self):
         command = (

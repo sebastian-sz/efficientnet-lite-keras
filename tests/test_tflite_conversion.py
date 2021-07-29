@@ -24,17 +24,19 @@ class TestTFLiteConversion(parameterized.TestCase):
     def test_tflite_conversion(
         self, model: tf.keras.Model, input_shape: Tuple[int, int]
     ):
-        model = model(weights=None, input_shape=(*input_shape, 3))
+        # Comparison will fail with random weights as we are comparing
+        # very low floats:
+        model = model(weights="imagenet", input_shape=(*input_shape, 3))
 
         self._convert_and_save_tflite(model)
         self.assertTrue(os.path.isfile(self.tflite_path))
 
         # Check outputs:
         mock_input = self.rng.uniform(shape=(1, *input_shape, 3), dtype=tf.float32)
-        original_output = model.predict(mock_input)
+        original_output = model(mock_input, training=False)
         tflite_output = self._run_tflite_inference(mock_input)
 
-        tf.debugging.assert_near(original_output, tflite_output, rtol=1e-3, atol=1e-3)
+        tf.debugging.assert_near(original_output, tflite_output)
 
     def _convert_and_save_tflite(self, model: tf.keras.Model):
         converter = tf.lite.TFLiteConverter.from_keras_model(model)

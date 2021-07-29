@@ -74,11 +74,11 @@ class TestKerasVSOriginalOutputConsistency(parameterized.TestCase):
         model = model(weights="imagenet", input_shape=input_shape + (3,))
         inputs = tf.image.resize(self.image, size=input_shape)
         inputs = self._pre_process_image(inputs)
-        outputs = model.predict(inputs)
+        outputs = model(inputs, training=False)
 
         original_outputs = np.load(original_outputs)
 
-        tf.debugging.assert_near(outputs, original_outputs, rtol=1e-3, atol=1e-3)
+        tf.debugging.assert_near(outputs, original_outputs)
 
     @staticmethod
     def _pre_process_image(img: tf.Tensor) -> tf.Tensor:
