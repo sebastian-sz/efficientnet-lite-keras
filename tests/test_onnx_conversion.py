@@ -19,7 +19,7 @@ class TestONNXConversion(parameterized.TestCase):
     saved_model_path = os.path.join(tempfile.mkdtemp(), "saved_model")
     onnx_model_path = os.path.join(tempfile.mkdtemp(), "model.onnx")
 
-    _tolerance = 1e-6
+    _tolerance = 1e-5
 
     def tearDown(self) -> None:
         if os.path.exists(self.onnx_model_path):

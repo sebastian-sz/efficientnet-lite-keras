@@ -16,7 +16,7 @@ class TestTFLiteConversion(parameterized.TestCase):
     rng = tf.random.Generator.from_non_deterministic_state()
     tflite_path = os.path.join(tempfile.mkdtemp(), "model.tflite")
 
-    _tolerance = 1e-6
+    _tolerance = 1e-5
 
     def tearDown(self) -> None:
         if os.path.exists(self.tflite_path):
