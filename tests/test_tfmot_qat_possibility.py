@@ -1,3 +1,5 @@
+from typing import Callable
+
 import tensorflow as tf
 import tensorflow_model_optimization as tfmot
 from absl.testing import absltest, parameterized
@@ -10,8 +12,8 @@ tf.config.set_visible_devices([], "GPU")
 
 class TestEfficientNetLiteQATWrap(parameterized.TestCase):
     @parameterized.named_parameters(TEST_PARAMS)
-    def test_qat_wrapper(self, model: tf.keras.Model, **kwargs):
-        model = model(weights=None)
+    def test_qat_wrapper(self, model_fn: Callable, **kwargs):
+        model = model_fn(weights=None)
         tfmot.quantization.keras.quantize_model(model)
 
 

@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 import tempfile
-from typing import Tuple
+from typing import Callable, Tuple
 
 import onnxruntime
 import tensorflow as tf
@@ -19,6 +19,8 @@ class TestONNXConversion(parameterized.TestCase):
     saved_model_path = os.path.join(tempfile.mkdtemp(), "saved_model")
     onnx_model_path = os.path.join(tempfile.mkdtemp(), "model.onnx")
 
+    _tolerance = 1e-6
+
     def tearDown(self) -> None:
         if os.path.exists(self.onnx_model_path):
             os.remove(self.onnx_model_path)
@@ -27,11 +29,13 @@ class TestONNXConversion(parameterized.TestCase):
 
     @parameterized.named_parameters(TEST_PARAMS)
     def test_model_onnx_conversion(
-        self, model: tf.keras.Model, input_shape: Tuple[int, int]
+        self, model_fn: Callable, input_shape: Tuple[int, int]
     ):
+        tf.keras.backend.clear_session()
+
         # Comparison will fail with random weights as we are comparing
         # very low floats:
-        model = model(weights="imagenet", input_shape=(*input_shape, 3))
+        model = model_fn(weights="imagenet", input_shape=(*input_shape, 3))
         model.save(self.saved_model_path)
 
         self._convert_onnx()
@@ -45,7 +49,9 @@ class TestONNXConversion(parameterized.TestCase):
         onnx_inputs = {onnx_session.get_inputs()[0].name: mock_input.numpy()}
         onnx_output = onnx_session.run(None, onnx_inputs)
 
-        tf.debugging.assert_near(original_output, onnx_output)
+        tf.debugging.assert_near(
+            original_output, onnx_output, rtol=self._tolerance, atol=self._tolerance
+        )
 
     def _convert_onnx(self):
         command = (

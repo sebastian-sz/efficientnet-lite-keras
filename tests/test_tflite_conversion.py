@@ -1,6 +1,6 @@
 import os
 import tempfile
-from typing import Tuple
+from typing import Callable, Tuple
 
 import numpy as np
 import tensorflow as tf
@@ -16,27 +16,33 @@ class TestTFLiteConversion(parameterized.TestCase):
     rng = tf.random.Generator.from_non_deterministic_state()
     tflite_path = os.path.join(tempfile.mkdtemp(), "model.tflite")
 
+    _tolerance = 1e-6
+
     def tearDown(self) -> None:
         if os.path.exists(self.tflite_path):
             os.remove(self.tflite_path)
 
     @parameterized.named_parameters(TEST_PARAMS)
-    def test_tflite_conversion(
-        self, model: tf.keras.Model, input_shape: Tuple[int, int]
-    ):
+    def test_tflite_conversion(self, model_fn: Callable, input_shape: Tuple[int, int]):
+        tf.keras.backend.clear_session()
+
         # Comparison will fail with random weights as we are comparing
         # very low floats:
-        model = model(weights="imagenet", input_shape=(*input_shape, 3))
+        model = model_fn(weights="imagenet", input_shape=(*input_shape, 3))
 
         self._convert_and_save_tflite(model)
         self.assertTrue(os.path.isfile(self.tflite_path))
 
         # Check outputs:
-        mock_input = self.rng.uniform(shape=(1, *input_shape, 3), dtype=tf.float32)
+        mock_input = self.rng.uniform(shape=(1, *input_shape, 3))
+
+        # model = model_fn(weights="imagenet", input_shape=(*input_shape, 3))
         original_output = model(mock_input, training=False)
         tflite_output = self._run_tflite_inference(mock_input)
 
-        tf.debugging.assert_near(original_output, tflite_output)
+        tf.debugging.assert_near(
+            original_output, tflite_output, rtol=self._tolerance, atol=self._tolerance
+        )
 
     def _convert_and_save_tflite(self, model: tf.keras.Model):
         converter = tf.lite.TFLiteConverter.from_keras_model(model)
