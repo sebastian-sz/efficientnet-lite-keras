@@ -84,17 +84,20 @@ DENSE_KERNEL_INITIALIZER = {
     "config": {"scale": 1.0 / 3.0, "mode": "fan_out", "distribution": "uniform"},
 }
 
-MODEL_TO_WEIGHTS_URL_MAP = {
-    "efficientnet_lite_b0_notop": "https://www.dropbox.com/s/10cjg2rp2425j9p/efficient_net_lite_b0_notop.h5?dl=1",  # noqa:E501
-    "efficientnet_lite_b0": "https://www.dropbox.com/s/chjjnfts6etvttq/efficient_net_lite_b0.h5?dl=1",  # noqa:E501
-    "efficientnet_lite_b1_notop": "https://www.dropbox.com/s/ydgeg9fgzs1pp45/efficient_net_lite_b1_notop.h5?dl=1",  # noqa:E501
-    "efficientnet_lite_b1": "https://www.dropbox.com/s/sgqx8nyaslxj31u/efficient_net_lite_b1.h5?dl=1",  # noqa:E501
-    "efficientnet_lite_b2_notop": "https://www.dropbox.com/s/2256fxa6wlu4m9t/efficient_net_lite_b2_notop.h5?dl=1",  # noqa:E501
-    "efficientnet_lite_b2": "https://www.dropbox.com/s/5k4oo72o3eksgqe/efficient_net_lite_b2.h5?dl=1",  # noqa:E501
-    "efficientnet_lite_b3_notop": "https://www.dropbox.com/s/uumpv5s39izpji8/efficient_net_lite_b3_notop.h5?dl=1",  # noqa:E501
-    "efficientnet_lite_b3": "https://www.dropbox.com/s/xjyox4e1qj4i2g5/efficient_net_lite_b3.h5?dl=1",  # noqa:E501
-    "efficientnet_lite_b4_notop": "https://www.dropbox.com/s/8dw7ho3clygieic/efficient_net_lite_b4_notop.h5?dl=1",  # noqa:E501
-    "efficientnet_lite_b4": "https://www.dropbox.com/s/3lcpqrw0oudzqet/efficient_net_lite_b4.h5?dl=1",  # noqa:E501
+WEIGHTS_BASE_URL = (
+    "https://github.com/sebastian-sz/efficientnet-lite-keras/releases/download/v1.0/"
+)
+WEIGHTS_HASHES = {
+    "efficientnet_lite_b0.h5": "8236b3edc4bd9019865ffd8290cf0b05",
+    "efficientnet_lite_b0_notop.h5": "d7a91a3c0e7f0bdffe67f599ebe511cd",
+    "efficientnet_lite_b1.h5": "8684671aebaf23b7fb03a0e10fbea162",
+    "efficientnet_lite_b1_notop.h5": "9fece5f941068bf189913cd5b42439bf",
+    "efficientnet_lite_b2.h5": "e3c7128846d3297734ec7465cb171989",
+    "efficientnet_lite_b2_notop.h5": "d0b7d56925cc4b82e30a45570766b32e",
+    "efficientnet_lite_b3.h5": "f6a5df9c63310630a5a7f9bcc45c9598",
+    "efficientnet_lite_b3_notop.h5": "7ae45c1c6cb1d2ba5193d131984a2225",
+    "efficientnet_lite_b4.h5": "25b9276e711f82443523df227aa32cad",
+    "efficientnet_lite_b4_notop.h5": "8939585df7b434869381f7786dc60290",
 }
 
 
@@ -305,10 +308,13 @@ def EfficientNetLite(
         if not include_top:
             model_variant += "_notop"
 
-        download_url = MODEL_TO_WEIGHTS_URL_MAP[model_variant]
         filename = f"{model_variant}.h5"
+        download_url = WEIGHTS_BASE_URL + filename
         weights_path = tf.keras.utils.get_file(
-            fname=filename, origin=download_url, cache_subdir="models"
+            fname=filename,
+            origin=download_url,
+            cache_subdir="models",
+            file_hash=WEIGHTS_HASHES[filename],
         )
         model.load_weights(weights_path)
 
