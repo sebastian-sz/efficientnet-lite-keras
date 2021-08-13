@@ -18,7 +18,7 @@ def _package_exists(name: str) -> bool:
 def _get_tensorflow_requirement():
     """Avoid re-download and misdetection of package."""
     lower = 2.2
-    upper = 2.6
+    upper = 2.7
 
     if _package_exists("tensorflow-cpu"):
         return [f"tensorflow-cpu>={lower},<{upper}"]
