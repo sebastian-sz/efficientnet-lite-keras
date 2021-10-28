@@ -1,14 +1,15 @@
 import os
-import shutil
-import subprocess
 import tempfile
 from typing import Callable, Tuple
 
 import onnxruntime
 import tensorflow as tf
+import tf2onnx
 from absl.testing import absltest, parameterized
+from tensorflow.python.types.core import GenericFunction
 
 from tests.test_efficientnet_lite import TEST_PARAMS
+from tests.utils import get_inference_function
 
 # Disable GPU
 tf.config.set_visible_devices([], "GPU")
@@ -16,7 +17,6 @@ tf.config.set_visible_devices([], "GPU")
 
 class TestONNXConversion(parameterized.TestCase):
     rng = tf.random.Generator.from_non_deterministic_state()
-    saved_model_path = os.path.join(tempfile.mkdtemp(), "saved_model")
     onnx_model_path = os.path.join(tempfile.mkdtemp(), "model.onnx")
 
     _tolerance = 1e-5
@@ -24,8 +24,6 @@ class TestONNXConversion(parameterized.TestCase):
     def tearDown(self) -> None:
         if os.path.exists(self.onnx_model_path):
             os.remove(self.onnx_model_path)
-        if os.path.exists(self.saved_model_path):
-            shutil.rmtree(self.saved_model_path)
 
     @parameterized.named_parameters(TEST_PARAMS)
     def test_model_onnx_conversion(
@@ -36,9 +34,10 @@ class TestONNXConversion(parameterized.TestCase):
         # Comparison will fail with random weights as we are comparing
         # very low floats:
         model = model_fn(weights="imagenet", input_shape=(*input_shape, 3))
-        model.save(self.saved_model_path)
+        inference_func = get_inference_function(model, input_shape)
 
-        self._convert_onnx()
+        self._convert_onnx(inference_func)
+
         self.assertTrue(os.path.isfile(self.onnx_model_path))
 
         # Compare outputs:
@@ -53,13 +52,13 @@ class TestONNXConversion(parameterized.TestCase):
             original_output, onnx_output, rtol=self._tolerance, atol=self._tolerance
         )
 
-    def _convert_onnx(self):
-        command = (
-            f"python -m tf2onnx.convert "
-            f"--saved-model {self.saved_model_path} "
-            f"--output {self.onnx_model_path} "
+    def _convert_onnx(self, inference_func: GenericFunction):
+        model_proto, _ = tf2onnx.convert.from_function(
+            inference_func,
+            output_path=self.onnx_model_path,
+            input_signature=inference_func.input_signature,
         )
-        subprocess.run(command, shell=True, check=True)
+        return model_proto
 
 
 if __name__ == "__main__":
