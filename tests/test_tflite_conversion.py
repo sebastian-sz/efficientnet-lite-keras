@@ -7,6 +7,7 @@ import tensorflow as tf
 from absl.testing import absltest, parameterized
 
 from tests.test_efficientnet_lite import TEST_PARAMS
+from tests.utils import get_inference_function
 
 # Disable GPU
 tf.config.set_visible_devices([], "GPU")
@@ -30,13 +31,12 @@ class TestTFLiteConversion(parameterized.TestCase):
         # very low floats:
         model = model_fn(weights="imagenet", input_shape=(*input_shape, 3))
 
-        self._convert_and_save_tflite(model)
+        self._convert_and_save_tflite(model, input_shape)
         self.assertTrue(os.path.isfile(self.tflite_path))
 
         # Check outputs:
         mock_input = self.rng.uniform(shape=(1, *input_shape, 3))
 
-        # model = model_fn(weights="imagenet", input_shape=(*input_shape, 3))
         original_output = model(mock_input, training=False)
         tflite_output = self._run_tflite_inference(mock_input)
 
@@ -44,8 +44,13 @@ class TestTFLiteConversion(parameterized.TestCase):
             original_output, tflite_output, rtol=self._tolerance, atol=self._tolerance
         )
 
-    def _convert_and_save_tflite(self, model: tf.keras.Model):
-        converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    def _convert_and_save_tflite(
+        self, model: tf.keras.Model, input_shape: Tuple[int, int]
+    ):
+        inference_func = get_inference_function(model, input_shape)
+        concrete_func = inference_func.get_concrete_function()
+        converter = tf.lite.TFLiteConverter.from_concrete_functions([concrete_func])
+
         tflite_model = converter.convert()
         with open(self.tflite_path, "wb") as file:
             file.write(tflite_model)
