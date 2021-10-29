@@ -1,4 +1,10 @@
-# Table of contens
+EfficientNet Lite models adapted to Keras functional API.
+
+### Changelog:
+* Nov 2021:
+  * Added separate `get_preprocessing_layer` utility function.
+
+# Table of contents
 1. [Introduction](https://github.com/sebastian-sz/efficientnet-lite-keras#introduction)
 2. [Quickstart](https://github.com/sebastian-sz/efficientnet-lite-keras#quickstart)
 3. [Installation](https://github.com/sebastian-sz/efficientnet-lite-keras#installation)
@@ -44,14 +50,14 @@ model.fit(...)
 
 You can fine tune these models, just like other Keras models.  
 
-For end-to-end fine tuning and conversion examples check out the 
+For end-to-end fine-tuning and conversion examples check out the 
 [Colab Notebook](https://colab.research.google.com/drive/1d_TJGYt68SBmCDnrNEGOz8XKbKNm_7tY?usp=sharing).
 
 # Installation
 There are multiple ways to install.  
 The only requirements are Tensorflow 2.2+ and Python 3.6+.
 
-### Option A: (recommended) pip install from github
+### Option A: (recommended) pip install from GitHub
 `pip install git+https://github.com/sebastian-sz/efficientnet-lite-keras@main`
 
 ### Option B: Build from source
@@ -92,13 +98,22 @@ def preprocess(image):  # input image is in range 0-255.
     return (image - 127.00) / 128.00
 ```
 
+##### (Alternatively) Preprocessing Layer:
+Or you can use [Preprocessing Layer](https://keras.io/guides/preprocessing_layers/):
+```python
+from efficientnet_lite import get_preprocessing_layer
+
+layer = get_preprocessing_layer()
+inputs = layer(image)
+```
+
 ### Input shapes
 The following table shows input shapes for each model variant:
 
 | Model variant | Input shape |
 |:-------------:|:-----------:|
-|       B0      | `224,224`  |
-|       B1      | `240,240`  |
+|       B0      | `224,224`   |
+|       B1      | `240,240`   |
 |       B2      | `260,260`   |
 |       B3      | `280,280`   |
 |       B4      | `300,300`   |
@@ -116,9 +131,10 @@ with open("efficientnet_lite.tflite", "wb") as file:
 ```
 
 ### ONNX
-The models are ONNX compatible. For ONNX Conversion you can use `tf2onnx` package:
+The models are ONNX compatible. For ONNX Conversion you can use [tf2onnx](
+https://github.com/onnx/tensorflow-onnx) package:
 ```python
-!pip install tf2onnx~=1.8.4
+!pip install tf2onnx==1.8.4
 
 # Save the model in TF's Saved Model format:
 model.save("my_saved_model/")
@@ -144,9 +160,9 @@ model = tfmot.sparsity.keras.prune_low_magnitude(model)
 
 # Original Weights
 The original weights are present in the
-[original repoistory](https://github.com/tensorflow/tpu/blob/master/models/official/efficientnet/lite/)
+[original repository](https://github.com/tensorflow/tpu/blob/master/models/official/efficientnet/lite/)
 for Efficient Net Lite in the form of Tensorflow's `.ckpt` files. Also, on Tensorflow's
-Github, there is a [utility script](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/keras/applications/efficientnet_weight_update_util.py)
+GitHub, there is a [utility script](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/keras/applications/efficientnet_weight_update_util.py)
 for converting EfficientNet weights.
 
 The scripts worked for me, after I modified the model's architecture, to match the
