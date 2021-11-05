@@ -42,17 +42,27 @@ jobs:
           pip install pre-commit~=2.12
           make lint
 
-
+  generate_tests_matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: |
+          VERSIONS=$(python .github/scripts/generate_tf_dependency_matrix.py)
+          echo "::set-output name=matrix::${VERSIONS//'%'/'%25'}"
 
   test:
+    needs: generate_tests_matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tensorflow-version: [ 2.2, 2.3, 2.4, 2.5, 2.6 ]
+        tensorflow-version: ${{fromJson(needs.generate_tests_matrix.outputs.matrix)}}
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.7
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
