@@ -55,7 +55,8 @@ For end-to-end fine-tuning and conversion examples check out the
 
 # Installation
 There are multiple ways to install.  
-The only requirements are Tensorflow 2.2+ and Python 3.6+.
+The only requirements are Tensorflow 2.2+ and Python 3.6+.  
+(Although, Tensorflow **at least** 2.4 is strongly recommended)
 
 ### Option A: (recommended) pip install from GitHub
 `pip install git+https://github.com/sebastian-sz/efficientnet-lite-keras@main`

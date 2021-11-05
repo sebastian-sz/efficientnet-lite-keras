@@ -6,8 +6,8 @@ import numpy as np
 import tensorflow as tf
 from absl.testing import absltest, parameterized
 
-from tests.test_efficientnet_lite import TEST_PARAMS
-from tests.utils import get_inference_function
+from test_efficientnet_lite.test_model import TEST_PARAMS
+from test_efficientnet_lite.utils import get_inference_function
 
 # Disable GPU
 tf.config.set_visible_devices([], "GPU")
@@ -23,10 +23,11 @@ class TestTFLiteConversion(parameterized.TestCase):
         if os.path.exists(self.tflite_path):
             os.remove(self.tflite_path)
 
-    @parameterized.named_parameters(TEST_PARAMS)
-    def test_tflite_conversion(self, model_fn: Callable, input_shape: Tuple[int, int]):
+    def setUp(self):
         tf.keras.backend.clear_session()
 
+    @parameterized.named_parameters(TEST_PARAMS)
+    def test_tflite_conversion(self, model_fn: Callable, input_shape: Tuple[int, int]):
         # Comparison will fail with random weights as we are comparing
         # very low floats:
         model = model_fn(weights="imagenet", input_shape=(*input_shape, 3))
