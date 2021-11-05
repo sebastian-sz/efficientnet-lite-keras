@@ -1,12 +1,9 @@
 from typing import Tuple
 
 import tensorflow as tf
-from tensorflow.python.types.core import GenericFunction
 
 
-def get_inference_function(
-    model: tf.keras.Model, input_shape: Tuple[int, int]
-) -> GenericFunction:
+def get_inference_function(model: tf.keras.Model, input_shape: Tuple[int, int]):
     """Return convertible inference function with provided model."""
 
     def inference_func(inputs):

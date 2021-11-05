@@ -1,8 +1,31 @@
 from pkg_resources import DistributionNotFound, get_distribution
 from setuptools import setup
 
+IGNORE_REQUIREMENTS = ("pre-commit",)
+
+
 with open("README.md", encoding="utf-8") as f:
     long_description = "\n" + f.read()
+
+
+def _fix_tf_requirement_if_other_installed(requirements):
+    tf_requirement_idx = [
+        i for i, x in enumerate(requirements) if x.startswith("tensorflow>=")
+    ][0]
+    tf_requirement = _modify_tensorflow_requirement(
+        requirements.pop(tf_requirement_idx)
+    )
+    requirements.append(tf_requirement)
+    return requirements
+
+
+def _modify_tensorflow_requirement(tf_requirement):
+    assert tf_requirement.startswith("tensorflow>=")
+    if _package_exists("tensorflow-cpu"):
+        tf_requirement = tf_requirement.replace("tensorflow", "tensorflow-cpu")
+    elif _package_exists("tensorflow-gpu"):
+        tf_requirement = tf_requirement.replace("tensorflow", "tensorflow-gpu")
+    return tf_requirement
 
 
 def _package_exists(name: str) -> bool:
@@ -15,17 +38,14 @@ def _package_exists(name: str) -> bool:
         return True
 
 
-def _get_tensorflow_requirement():
-    """Avoid re-download and misdetection of package."""
-    lower = 2.2
-    upper = 2.7
-
-    if _package_exists("tensorflow-cpu"):
-        return [f"tensorflow-cpu>={lower},<{upper}"]
-    elif _package_exists("tensorflow-gpu"):
-        return [f"tensorflow-gpu>={lower},<{upper}"]
-    else:
-        return [f"tensorflow>={lower},<{upper}"]
+with open("requirements.txt", "r") as f:
+    content = f.readlines()
+    requirements = [
+        line
+        for line in content
+        if not line.startswith(("#", "\n", *IGNORE_REQUIREMENTS))
+    ]
+    requirements = _fix_tf_requirement_if_other_installed(requirements)
 
 
 setup(
@@ -45,5 +65,5 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     packages=["efficientnet_lite"],
-    install_requires=_get_tensorflow_requirement(),
+    install_requires=requirements,
 )

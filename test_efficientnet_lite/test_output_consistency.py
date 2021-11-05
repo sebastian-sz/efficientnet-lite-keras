@@ -12,7 +12,7 @@ from efficientnet_lite import (
     EfficientNetLiteB3,
     EfficientNetLiteB4,
 )
-from tests._root_dir import ROOT_DIR
+from test_efficientnet_lite._root_dir import ROOT_DIR
 
 # Disable GPU
 tf.config.set_visible_devices([], "GPU")
@@ -66,11 +66,13 @@ class TestKerasVSOriginalOutputConsistency(parameterized.TestCase):
     image = tf.image.decode_png(tf.io.read_file(image_path))
     image = tf.expand_dims(image, axis=0)
 
+    def setUp(self):
+        tf.keras.backend.clear_session()
+
     @parameterized.named_parameters(OUTPUT_TEST_PARAMS)
     def test_keras_and_original_outputs_the_same(
         self, model_fn: Callable, input_shape: Tuple[int, int], original_outputs: str
     ):
-
         model = model_fn(weights="imagenet", input_shape=(*input_shape, 3))
         inputs = tf.image.resize(self.image, size=input_shape)
         inputs = self._pre_process_image(inputs)

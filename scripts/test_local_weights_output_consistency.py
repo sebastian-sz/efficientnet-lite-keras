@@ -14,7 +14,7 @@ from efficientnet_lite import (
     EfficientNetLiteB3,
     EfficientNetLiteB4,
 )
-from tests._root_dir import ROOT_DIR
+from test_efficientnet_lite._root_dir import ROOT_DIR
 
 WEIGHTS_DIR = "/".join(ROOT_DIR.split("/")[:-1]) + "/weights"
 

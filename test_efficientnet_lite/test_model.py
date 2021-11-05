@@ -56,6 +56,9 @@ class TestEfficientNetLiteUnit(parameterized.TestCase):
         if os.path.exists(self.model_path):
             os.remove(self.model_path)
 
+    def setUp(self):
+        tf.keras.backend.clear_session()
+
 
 if __name__ == "__main__":
     absltest.main()
