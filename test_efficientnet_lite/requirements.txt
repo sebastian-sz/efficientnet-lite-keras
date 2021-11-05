@@ -3,4 +3,4 @@ tf2onnx>=1.8,<1.10
 onnxruntime>=1.7,<1.10
 
 # TFMot
-tensorflow_model_optimization>=0.5,<0.7
+tensorflow_model_optimization>=0.5,<0.8
