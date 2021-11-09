@@ -1,8 +1,5 @@
 test:
-	@for f in $(shell ls test_efficientnet_lite/test*.py); do \
-  		echo $${f};\
-		python $${f};\
-		done
+	python -m unittest -v -f test_efficientnet_lite/test*.py
 
 lint:
 	pre-commit run --all-files
