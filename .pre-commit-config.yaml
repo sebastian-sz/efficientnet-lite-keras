@@ -5,11 +5,13 @@ repos:
     hooks:
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
+        exclude: ^(imagenet_evaluation/external/|imagenet_evaluation/utils/)
 
 -   repo: https://github.com/psf/black
     rev: 19.3b0
     hooks:
     -   id: black
+        exclude: ^(imagenet_evaluation/external/|imagenet_evaluation/utils/)
 
 -   repo: https://github.com/pycqa/isort
     rev: 5.8.0
@@ -18,6 +20,7 @@ repos:
         args:
         - --profile=black
         name: isort (python)
+        exclude: ^(imagenet_evaluation/external/|imagenet_evaluation/utils/)
 
 -   repo: https://github.com/PyCQA/flake8
     rev: 3.9.0
@@ -26,5 +29,5 @@ repos:
         args:
         - --max-line-length=88
         - --ignore=D107,W503,D402,D100
-        - --exclude=test*
+        - --exclude=test*,imagenet_evaluation/external/*,imagenet_evaluation/utils/*
         additional_dependencies: [flake8-docstrings]
