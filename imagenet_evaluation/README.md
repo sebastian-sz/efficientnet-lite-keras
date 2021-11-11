@@ -23,7 +23,7 @@ produce **exactly the same** (up to 13th decimal) Imagenet accuracy results.
 |   B3    |     79.8       |       79.4*      |       94.7      |       -0.4*      |
 |   B4    |     81.5       |       80.8*      |       95.2      |       -0.7*      |
 
-*Mismatched Accuracy for B3 and B4 variant. See [Notice](https://github.com/sebastian-sz/efficientnet-lite-keras/imagenet_evaluation#notice) above.
+*Mismatched Accuracy for B3 and B4 variant. See [Notice](https://github.com/sebastian-sz/efficientnet-lite-keras/tree/main/imagenet_evaluation#notice) above.
 
 
 #### Why small differences?
