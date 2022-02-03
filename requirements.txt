@@ -1,5 +1,5 @@
 # Main Tensorflow requirement
-tensorflow>=2.2,<2.8
+tensorflow>=2.2,<2.9
 
 # Lint tool
 pre-commit>=2.12,<2.13
