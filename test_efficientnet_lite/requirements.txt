@@ -1,5 +1,5 @@
 # ONNX conversion:
-tf2onnx>=1.8,<1.10
+tf2onnx>=1.8,<1.11
 onnxruntime>=1.7,<1.11
 
 # TFMot
