@@ -1,3 +1,8 @@
+"""Check whether original models and rewritten here output the same/similar values.
+
+This test exists outside the main test suite as it's the only one that needs to download all the weights.
+"""
+
 import os
 from typing import Callable, Tuple
 
@@ -88,4 +93,4 @@ class TestKerasVSOriginalOutputConsistency(parameterized.TestCase):
 
 
 if __name__ == "__main__":
-    absltest.main()
+    absltest.main(failfast=True)
