@@ -1,3 +1,6 @@
+# Pytest for easier test discovery
+pytest>=7.1,<7.2
+
 # ONNX conversion:
 tf2onnx>=1.8,<1.10
 onnxruntime>=1.7,<1.12
