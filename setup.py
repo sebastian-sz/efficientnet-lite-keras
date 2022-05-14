@@ -14,7 +14,6 @@ setup(
     author="Sebastian Szymanski",
     author_email="mocart15@gmail.com",
     license="Apache",
-    python_requires=">=3.6.0,<3.10",
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
