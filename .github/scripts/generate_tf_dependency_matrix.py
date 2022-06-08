@@ -27,8 +27,8 @@ def main():
     lower_minor = int(lower.split(".")[-1])
     upper_minor = int(upper.split(".")[-1])
 
-    # Skip versions below 2.4 - too old and hard to maintain
-    lower_minor = 4 if lower_minor < 4 else lower_minor
+    # Skip versions below 2.6 - they seem to be unsupported
+    lower_minor = 6 if lower_minor < 6 else lower_minor
     matrix = [f"2.{minor}" for minor in range(lower_minor, upper_minor)]
 
     print(json.dumps(matrix))
