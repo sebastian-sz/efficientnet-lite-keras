@@ -2,9 +2,11 @@ import copy
 import math
 
 import tensorflow as tf
+from packaging import version
 from tensorflow.keras import layers
 
-if tf.__version__ < "2.8":  # Keras has been moved to separate repository
+# Keras has been moved to separate repository
+if version.parse(tf.__version__) < version.parse("2.8"):
     from tensorflow.python.keras.applications import imagenet_utils
 else:
     from keras.applications import imagenet_utils
