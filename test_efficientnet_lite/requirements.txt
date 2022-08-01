@@ -2,7 +2,7 @@
 pytest>=7.1,<7.2
 
 # ONNX conversion:
-tf2onnx>=1.8,<1.12
+tf2onnx>=1.8,<1.13
 onnxruntime>=1.7,<1.12
 
 # TFMot
