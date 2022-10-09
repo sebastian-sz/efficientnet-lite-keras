@@ -88,7 +88,9 @@ jobs:
       - name: Install dependencies (TF version ${{ matrix.tensorflow-version }})
         run: |
           python -m pip install --upgrade pip
+          python -m pip install tensorflow~=${{matrix.tensorflow-version}}.0
           pip install -r test_efficientnet_lite/requirements.txt
+          # Force conflicting deps to favor Tensorflow
           python -m pip install tensorflow~=${{matrix.tensorflow-version}}.0
           pip install -e .
       - name: Run tests
