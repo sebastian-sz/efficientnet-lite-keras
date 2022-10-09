@@ -90,7 +90,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install tensorflow~=${{matrix.tensorflow-version}}.0
           # Ignore external dependencies, overwriting TF deps
-          pip install -r --ignore-installed test_efficientnet_lite/requirements.txt
+          pip install --ignore-installed -r test_efficientnet_lite/requirements.txt
           pip install -e .
       - name: Run tests
         run: pytest -x test_efficientnet_lite/test_*  # Run all tests except check_output_consistency.py
