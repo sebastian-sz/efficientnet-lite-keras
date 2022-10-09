@@ -91,5 +91,10 @@ jobs:
           python -m pip install tensorflow~=${{matrix.tensorflow-version}}.0
           pip install -r test_efficientnet_lite/requirements.txt
           pip install -e .
+          
+          # Fix broken TF 2.10 flatbuffer dependency
+          if [[ ${{ matrix.tensorflow-version }} == 2.10 ]]; then
+          pip install -U --no-deps flatbuffers==22.9.24
+          fi
       - name: Run tests
         run: pytest -x test_efficientnet_lite/test_*  # Run all tests except check_output_consistency.py
