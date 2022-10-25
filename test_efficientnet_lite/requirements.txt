@@ -1,5 +1,5 @@
 # Pytest for easier test discovery
-pytest>=7.1,<7.2
+pytest>=7.1,<7.3
 
 # ONNX conversion:
 tf2onnx>=1.8,<1.12
