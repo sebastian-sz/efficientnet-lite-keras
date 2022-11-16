@@ -9,5 +9,5 @@ updates:
     - "sebastian-sz"
   reviewers:
     - "sebastian-sz"
-  ignore:
-  - dependency-name: pre-commit
+  allow:
+  - dependency-name: tensorflow

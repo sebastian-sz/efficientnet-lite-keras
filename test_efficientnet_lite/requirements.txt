@@ -1,9 +1,10 @@
 # Pytest for easier test discovery
-pytest>=7.1,<7.2
+pytest~=7.2
 
-# ONNX conversion:
-tf2onnx>=1.8,<1.12
-onnxruntime>=1.7,<1.12
+# ONNX conversion - I do not pin specific version due to
+# package conflicts with different TF versions.
+tf2onnx
+onnxruntime
 
 # TFMot
-tensorflow_model_optimization>=0.5,<0.8
+tensorflow_model_optimization
