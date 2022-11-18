@@ -5,6 +5,3 @@ pytest~=7.2
 # package conflicts with different TF versions.
 tf2onnx
 onnxruntime
-
-# TFMot
-tensorflow_model_optimization
