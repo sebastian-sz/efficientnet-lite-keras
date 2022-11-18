@@ -1,5 +1,8 @@
+# NOTE: for running the repo only Tensorflow is necessary.
+# These are mostly for developement and CI/CD.
+
 # Main Tensorflow requirement
-tensorflow>=2.2,<2.10
+tensorflow>=2.2,<2.11
 
 # Lint tool
-pre-commit>=2.12,<2.13
+pre-commit~=2.12.0

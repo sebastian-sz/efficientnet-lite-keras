@@ -19,5 +19,6 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
     ],
+    install_requires=["packaging"],
     packages=["efficientnet_lite"],
 )
