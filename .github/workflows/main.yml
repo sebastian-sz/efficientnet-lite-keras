@@ -72,6 +72,28 @@ jobs:
           VERSIONS=$(python .github/scripts/generate_tf_dependency_matrix.py)
           echo "::set-output name=matrix::${VERSIONS//'%'/'%25'}"
 
+  pip-install-check:
+    needs: generate_tests_matrix
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tensorflow-version: ${{fromJson(needs.generate_tests_matrix.outputs.matrix)}}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install dependencies (TF version ${{ matrix.tensorflow-version }})
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install tensorflow~=${{matrix.tensorflow-version}}.0
+          pip install git+https://github.com/sebastian-sz/efficientnet-lite-keras@$GITHUB_HEAD_REF
+      - name: Verify works
+        run: |
+          python -c "import tensorflow as tf; from efficientnet_lite import EfficientNetLiteB0; EfficientNetLiteB0(weights=None)(tf.random.uniform((1,224,224,3)));"
+
   test:
     needs: generate_tests_matrix
     runs-on: ubuntu-latest
