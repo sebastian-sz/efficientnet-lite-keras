@@ -2,7 +2,7 @@
 # These are mostly for developement and CI/CD.
 
 # Main Tensorflow requirement
-tensorflow>=2.2,<2.12
+tensorflow>=2.2,<2.13
 
 # Lint tool
 pre-commit~=2.12.0
